@@ -1,0 +1,7 @@
+apscheduler
+croniter
+flask
+gunicorn
+python-dotenv
+requests
+spotipy

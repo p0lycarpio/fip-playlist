@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+url=${SPOTIPY_REDIRECT_URI}
+port=$(echo "$url" | grep -Eo ':[0-9]+' | sed 's/://')
+
+if [ -z "$port" ]; then
+    echo "Aucun numéro de port trouvé dans l'URL de redirection Spotify."
+fi
+
+cd /app
+/usr/local/bin/gunicorn --bind :${port} authentification:app
