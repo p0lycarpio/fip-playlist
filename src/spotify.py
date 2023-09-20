@@ -19,16 +19,19 @@ class Spotify:
             scope="playlist-modify-private playlist-modify-public",
             redirect_uri=redirect_uri,
         )
-        self.oauth.get_access_token(self._read_token_file("SPOTIFY_TOKEN"))
-        self.sp = spotipy.Spotify(oauth_manager=self.oauth)
+        self.sp = None
 
-    def _read_token_file(self, path: str) -> str:
+    def get_token(self, path: str):
         while not os.path.exists(path):
             time.sleep(10)
             print("En attente de l'authentification Spotify...")
         if os.path.isfile(path):
+            print("Authentification Spotify réussie !")
             with open(path, "r") as f:
-                return f.read()
+                token = f.read()
+            f.close()
+        self.oauth.get_access_token(token)
+        self.sp = spotipy.Spotify(oauth_manager=self.oauth)
 
     def add_playlist_items(self, uris: list):
         prepend = "spotify:track:{0}"

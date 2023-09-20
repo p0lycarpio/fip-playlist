@@ -116,7 +116,7 @@ class RadioFrance:
 
         if response.status_code == 200:
             response = response.json()
-            print("get tracks uri response", response)
+            # print("get tracks uri response", response)
 
             uris = [
                 link["url"].split("/")[-1]

@@ -32,6 +32,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY src/ /app/
 COPY etc/ /etc/
 
-ENV TZ="Europe/Paris"
-
 ENTRYPOINT ["/init"]

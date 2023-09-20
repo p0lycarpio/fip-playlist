@@ -8,7 +8,7 @@ auth_manager = SpotifyOAuth(
     client_id=os.getenv("SPOTIFY_CLIENT_ID"),
     client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
     scope="playlist-modify-private playlist-modify-public",
-    redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+    redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
 )
 
 
