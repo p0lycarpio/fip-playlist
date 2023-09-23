@@ -10,19 +10,26 @@ from spotify import Spotify
 
 
 def get_previous_timestamp(cron_expression):
-    """Extract last execution of CRON expression
+    """Extract the execution timestamp before the current time for the given CRON expression.
 
     Args:
-        cron_expression (str): Expression cron valide (par exemple, "*/5 * * * *")
+        cron_expression (str): Valid cron format expression (e.g., "*/10 * * * *").
 
     Returns:
-        int: timestamp
+        int: Timestamp of the previous execution.
     """
     current_time = datetime.datetime.now()
     cron = croniter(cron_expression, current_time)
-    previous_time = cron.get_prev(datetime.datetime)
+    
+    # Remonter dans le temps jusqu'à obtenir une exécution antérieure
+    while True:
+        previous_time = cron.get_prev(datetime.datetime)
+        if previous_time < current_time:
+            break
+        cron.get_prev(datetime.datetime)  # Obtenir la précédente, puis vérifier à nouveau
+
     previous_timestamp = int(previous_time.timestamp())
-    #print("search timestamp", previous_timestamp)
+    print("search timestamp", previous_timestamp)
     return previous_timestamp
 
 
