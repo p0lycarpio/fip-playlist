@@ -1,34 +1,16 @@
-import datetime
+from datetime import datetime, timedelta
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from apscheduler.triggers.cron import CronTrigger
-from croniter import croniter
 
 from config import Config
 from radiofrance import RadioFrance
 from spotify import Spotify
 
 
-def get_previous_timestamp(cron_expression):
-    """Extract the execution timestamp before the current time for the given CRON expression.
-
-    Args:
-        cron_expression (str): Valid cron format expression (e.g., "*/10 * * * *").
-
-    Returns:
-        int: Timestamp of the previous execution.
-    """
-    current_time = datetime.datetime.now()
-    cron = croniter(cron_expression, current_time)
-    
-    # Remonter dans le temps jusqu'à obtenir une exécution antérieure
-    while True:
-        previous_time = cron.get_prev(datetime.datetime)
-        if previous_time < current_time:
-            break
-        cron.get_prev(datetime.datetime)  # Obtenir la précédente, puis vérifier à nouveau
-
-    previous_timestamp = int(previous_time.timestamp())
+def get_previous_timestamp(interval : int) -> int:
+    current_time = datetime.now()
+    previous_date = current_time - timedelta(minutes=interval, seconds=10)
+    previous_timestamp = int(previous_date.timestamp())
     print("search timestamp", previous_timestamp)
     return previous_timestamp
 
@@ -41,7 +23,7 @@ def sync_playlists(env, spotify) -> None:
         user_id=env.getenv("RF_USER_ID", None),
     )
 
-    timerange = get_previous_timestamp(env.getenv("CRON"))
+    timerange = get_previous_timestamp(int(env.getenv("INTERVAL"), 10))
 
     # Fetch Radio France likes
     items = radio.get_playlist_items(
@@ -81,7 +63,8 @@ if __name__ == "__main__":
     scheduler = BlockingScheduler(timezone=env.getenv("TZ", "Europe/Paris"))
     scheduler.add_job(
         func=sync_playlists,
-        trigger=CronTrigger.from_crontab(env.getenv("CRON", "*/10 * * * *")),
+        trigger="interval",
+        minutes=int(env.getenv("INTERVAL", 10)),
         args=[env, spotify],
     )
     scheduler.print_jobs()

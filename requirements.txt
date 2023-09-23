@@ -1,5 +1,4 @@
 apscheduler
-croniter
 flask
 gunicorn
 python-dotenv

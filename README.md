@@ -42,5 +42,5 @@ Enregistrez des "titres favoris" directement sur l'application ou le site Radio 
 - **SPOTIFY_CLIENT_SECRET**: Spotify app secret
 - **SPOTIFY_REDIRECT_URL**: lien de redirection de l'app et port
 - *SPOTIFY_PLAYLIST*: ID de la playlist, optionnel. Si non définie, enregistre les morceaux dans les favoris
-- *CRON*: lancement programmé de la synchronisation. Format CRON, par défaut : `*/10 * * * *`
+- *INTERVAL*: temps en minutes entre chaque synchronisation. Par défaut à **10**.
 - *TZ* : timezone. Défaut: `UTC`
