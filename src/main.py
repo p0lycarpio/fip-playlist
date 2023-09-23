@@ -9,12 +9,11 @@ from radiofrance import RadioFrance
 from spotify import Spotify
 
 
-def get_previous_timestamp(cron_expression, margin: int = 0):
+def get_previous_timestamp(cron_expression):
     """Extract last execution of CRON expression
 
     Args:
-        cron_expression (str): cron valide format expression
-        margin (int, optional): seconds of margin. Defaults to 0.
+        cron_expression (str): Expression cron valide (par exemple, "*/5 * * * *")
 
     Returns:
         int: timestamp
@@ -22,8 +21,8 @@ def get_previous_timestamp(cron_expression, margin: int = 0):
     current_time = datetime.datetime.now()
     cron = croniter(cron_expression, current_time)
     previous_time = cron.get_prev(datetime.datetime)
-    previous_timestamp = int(previous_time.timestamp() - margin)
-    # print("search timestamp", previous_timestamp)
+    previous_timestamp = int(previous_time.timestamp())
+    #print("search timestamp", previous_timestamp)
     return previous_timestamp
 
 
@@ -35,7 +34,7 @@ def sync_playlists(env, spotify) -> None:
         user_id=env.getenv("RF_USER_ID", None),
     )
 
-    timerange = get_previous_timestamp(env.getenv("CRON"), 50)
+    timerange = get_previous_timestamp(env.getenv("CRON"))
 
     # Fetch Radio France likes
     items = radio.get_playlist_items(
